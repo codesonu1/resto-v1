@@ -1,6 +1,19 @@
 import React from "react";
-function App() {
-  return <div className="App text-[red] font-bold">hello world</div>;
-}
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./home";
+
+const RouteManager = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+const App = () => {
+  return RouteManager();
+};
 
 export default App;
