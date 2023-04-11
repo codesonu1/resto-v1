@@ -15,3 +15,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.section2-image {
+  background-image: url("../public/assets/restaurant.jpg");
+  rotate: 90;
+}
