@@ -34,6 +34,7 @@ const Signup = () => {
               name="name"
               value={signup.name}
               variant="outlined"
+              placeholder="Name"
               required
               onChange={onchange}
             />
@@ -45,6 +46,7 @@ const Signup = () => {
               name="email"
               value={signup.email}
               onChange={onchange}
+              placeholder="Email"
               required
             />
             <TextField
@@ -55,6 +57,7 @@ const Signup = () => {
               name="number"
               value={signup.number}
               onChange={onchange}
+              placeholder="Number"
               required
             />
 
@@ -66,6 +69,7 @@ const Signup = () => {
               name="password"
               value={signup.password}
               onChange={onchange}
+              placeholder="Password"
               required
             />
             <TextField
@@ -76,10 +80,14 @@ const Signup = () => {
               name="Cpassword"
               value={signup.Cpassword}
               onChange={onchange}
+              placeholder="Confirm Password"
               required
             />
           </div>
-          <div className="mt-[3rem] flex gap-2">
+          <p className="border bg-[#D777D2] p-3 rounded-md uppercase my-3 w-[130px] text-center text-[white]">
+            sign up
+          </p>
+          <div className="  flex gap-2">
             <input
               type="checkbox"
               required
@@ -87,9 +95,6 @@ const Signup = () => {
             />
             <p>Please Agree to all the Terms & Conditions</p>
           </div>
-          <p className="border bg-[#D777D2] p-3 rounded-md uppercase my-3 w-[130px] text-center text-[white]">
-            sign up
-          </p>
         </Container>
       </div>
     </div>

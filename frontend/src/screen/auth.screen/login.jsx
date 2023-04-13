@@ -33,6 +33,7 @@ const Login = () => {
               name="email"
               value={login.email}
               onChange={onchange}
+              placeholder="Email"
               required
             />
             <p className="py-2 ">Password : </p>
@@ -42,6 +43,7 @@ const Login = () => {
               name="password"
               value={login.password}
               onChange={onchange}
+              placeholder="Password"
               required
             />
             <p className="border bg-[#D777D2] p-3 rounded-md uppercase my-3 w-[130px] text-center text-[white]">
