@@ -5,6 +5,8 @@ import { Container } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
+  const token = localStorage.getItem("token");
+
   return (
     <>
       <div className="grid grid-flow-row lg:grid-cols-2 lg:gap-3">
@@ -14,13 +16,12 @@ const Hero = () => {
               <img src="/logo192.jpg" alt="" className="w-[120px] h-[120]" />
             </div>
             <div className="flex justify-end gap-4 mt-[3rem]">
-              <Link to={"/login"}>
-                {" "}
-                <p className="py-2">Login</p>{" "}
+              <Link to={token ? "/dashboard " : "/login"}>
+                <p className="py-2">{token ? "Dashboard " : "Login"}</p>{" "}
               </Link>
-              <Link to={"/register"}>
+              <Link to={token ? "/my-account " : "/register"}>
                 <p className="bg-[black] text-white border rounded-md h-[40px] uppercase px-3 py-2">
-                  sign up
+                  {token ? "My Account" : "sign up"}
                 </p>
               </Link>
             </div>
@@ -33,15 +34,19 @@ const Hero = () => {
               <div className="flex justify-center">
                 <div>
                   <div className="flex justify-center">
-                    <MdOutlineDeliveryDining className="text-[5rem] text-[#D777D2] border bg-[#faf9f9] rounded-full p-2 shadow-md" />
+                    <Link to={"/delivery"}>
+                      {" "}
+                      <MdOutlineDeliveryDining className="text-[5rem] text-[#F27E18] border bg-[#faf9f9] rounded-full p-2 shadow-md" />{" "}
+                    </Link>
                   </div>
+
                   <p className="py-3">Get Food & Grocery delivered</p>
                 </div>
               </div>
               <div className="flex justify-center">
                 <div>
                   <div className="flex justify-center">
-                    <BsSignDeadEnd className="text-[5rem] text-[#D777D2] border bg-[#faf9f9] rounded-full p-2 shadow-md" />
+                    <BsSignDeadEnd className="text-[5rem] text-[#F27E18] border bg-[#faf9f9] rounded-full p-2 shadow-md" />
                   </div>
                   <p className=" py-3">Grab Free Restaurant Deals </p>
                 </div>

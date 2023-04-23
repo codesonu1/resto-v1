@@ -1,4 +1,6 @@
 const jwttoken = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
+
 exports.authError = (req, res, next) => {
   const authToken = req.header("auth-token");
   console.log(authToken);
@@ -10,7 +12,6 @@ exports.authError = (req, res, next) => {
   }
   try {
     const data = jwttoken.verify(authToken, process.env.SECRET_KEY);
-    console.log(process.env.SECRET_KEY, token);
     req.login = data.login;
   } catch (error) {
     console.log({

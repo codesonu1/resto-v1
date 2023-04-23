@@ -23,6 +23,15 @@ const authSchema = new Schema(
       required: [true, "enter valid password"],
       trim: true,
     },
+    address: {
+      type: String,
+      required: [true, "enter valid address"],
+      trim: true,
+    },
+    usertype: {
+      type: String,
+      default: "customer",
+    },
     createdAt: {
       type: Date,
       default: Date.now(),

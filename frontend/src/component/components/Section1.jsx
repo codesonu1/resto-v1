@@ -14,20 +14,20 @@ const Section1 = () => {
             <p className="text-white text-semibold pt-3 text-[2rem] font-semibold uppercase">
               get food
             </p>
-            <p className="bg-[#D777D2] py-3 px-4 rounded-[5px] text-[1.5rem]  font-700 uppercase  text-black">
+            <p className="bg-[#F27E18] py-3 px-4 rounded-[5px] text-[1.5rem]  font-700 uppercase  text-black">
               choose destination
             </p>
           </div>
           <div className="grid grid-flow-row lg:grid-cols-4 md:grid-cols-2  gap-3 mt-[3rem] ">
             <div>
               <span className="flex justify-center">
-                <BsCartCheck className="text-[#D777D2] text-[4rem] " />
+                <BsCartCheck className="text-[#F27E18] text-[4rem] " />
               </span>
               <p className="text-[white] py-2 text-center">No minimum order</p>
             </div>
             <div>
               <span className="flex justify-center">
-                <MdOutlineDeliveryDining className="text-[#D777D2] text-[4rem]" />
+                <MdOutlineDeliveryDining className="text-[#F27E18] text-[4rem]" />
               </span>
               <p className="text-[white] py-2 text-center">
                 Free Delivery for orders more than Rs.1000
@@ -35,7 +35,7 @@ const Section1 = () => {
             </div>
             <div>
               <span className="flex justify-center">
-                <BsCash className="text-[#D777D2] text-[4rem]" />
+                <BsCash className="text-[#F27E18] text-[4rem]" />
               </span>
               <p className="text-[white] py-2 text-center">
                 Cash back with every order
@@ -43,7 +43,7 @@ const Section1 = () => {
             </div>
             <div>
               <span className="flex justify-center">
-                <RiSecurePaymentLine className="text-[#D777D2] text-[4rem]" />
+                <RiSecurePaymentLine className="text-[#F27E18] text-[4rem]" />
               </span>
               <p className="text-[white] py-2 text-center">
                 Pay online or cash on delivery

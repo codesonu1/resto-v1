@@ -2,13 +2,25 @@ import { Container } from "@mui/system";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "./header";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Userlogin } from "../../store/Auth/auth.thunk";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [login, setLogin] = useState({
     email: "",
 
     password: "",
   });
+
+  const submit = () => {
+    const { email, password } = login;
+    dispatch(Userlogin({ email, password, navigate }));
+  };
 
   const onchange = (e) => {
     const { value, name } = e.target;
@@ -22,7 +34,11 @@ const Login = () => {
   return (
     <>
       <Header />
-
+      <Helmet>
+        <title>
+          {document.location.pathname.replace("/", "").toUpperCase()}
+        </title>
+      </Helmet>
       <Container className="mt-[7rem] mx-[4rem]">
         <div className="flex justify-center border bg-[white] shadow-md   ">
           <div>
@@ -46,14 +62,17 @@ const Login = () => {
               placeholder="Password"
               required
             />
-            <p className="border bg-[#D777D2] p-3 rounded-md uppercase my-3 w-[130px] text-center text-[white]">
+            <p
+              className="border bg-[#F27E18] p-3 rounded-md uppercase my-3 w-[130px] text-center text-[white]"
+              onClick={submit}
+            >
               Login
             </p>
             <p className="font-[400] capitalize py-3">
               Don’t have an account?{" "}
               <Link to={"/register"}>
                 {" "}
-                <span className="uppercase text-[#d777D2] px-2">
+                <span className="uppercase text-[#F27E18] px-2">
                   SIGN UP
                 </span>{" "}
               </Link>
