@@ -14,7 +14,7 @@ const productSchema = new Schema({
       restruant_name: {
         type: String,
         trim: true,
-        //required: [true, "restruant_name is required"],
+        required: [true, "restruant_name is required"],
       },
       restruant_desc: {
         type: String,
@@ -30,18 +30,18 @@ const productSchema = new Schema({
         type: String,
         trim: true,
         enum: ["veg", "non-veg"],
-        //required: [true, "food_type is required"],
+        required: [true, "food_type is required"],
       },
       status: {
         type: String,
         trim: true,
         enum: ["open", "closed"],
-        //required: [true, "status is required"],
+        required: [true, "status is required"],
       },
       delivery_time: {
         type: Number,
         trim: true,
-        //required: [true, "delivery_time is required"],
+        required: [true, "delivery_time is required"],
       },
       food_name: {
         type: String,
@@ -60,10 +60,27 @@ const productSchema = new Schema({
       },
     },
   ],
-  menu: [
+  category: [
     {
-      menu_name: String,
-      menu_price: Number,
+      category: {
+        type: String,
+        trim: true,
+        required: [true, "category is required"],
+      },
+      Cat_price: {
+        type: Number,
+        required: [true, "price is required"],
+      },
+      Cat_discount: {
+        type: Number,
+        validate: {
+          validator: function (el) {
+            return el < this.Cat_price;
+          },
+          message:
+            "The Discount amount {VALUE} should be less than total price",
+        },
+      },
     },
   ],
 });
