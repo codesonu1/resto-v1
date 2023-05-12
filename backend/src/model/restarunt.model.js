@@ -1,38 +1,39 @@
 const { Schema, model, Types } = require("mongoose");
 
-const restrauntSchema = new Schema({
-  city: {
-    type: Types.ObjectId,
-    ref: "cities",
-  },
-  name: String,
-  description: String,
-  tags: String,
-  openTIme: Date,
-  closeTIme: Date,
-  image: String,
-  location: String,
-  deliveryTime: Date,
-  cuisine: [String], // for filter purpose
-  ratings: {
-    total: Number,
-    numOfRating: Number,
-    avg: Number,
-    stars: {
-      5: Number,
-      4: Number,
-      3: Number,
-      2: Number,
-      1: Number,
+const restrauntSchema = new Schema(
+  {
+    city_id: {
+      type: Types.ObjectId,
+      ref: "cities",
     },
-    list: [
-      {
-        rate: Number,
-        desc: String,
-        userid: String,
-      },
-    ],
+    name: {
+      type: String,
+      trim: true,
+    },
+    location: {
+      type: String,
+      trim: true,
+    },
+    image: String,
+    cusinis: [String],
+    description: {
+      type: String,
+      trim: true,
+    },
+    delivery_time: {
+      type: String,
+    },
+    opening: {
+      type: String,
+    },
+    closing: {
+      type: String,
+    },
   },
-});
+
+  {
+    timestamps: true,
+  }
+);
 
 exports.restraunts = model("restraunts", restrauntSchema);

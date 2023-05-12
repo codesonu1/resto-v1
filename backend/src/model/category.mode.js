@@ -1,15 +1,29 @@
 const { Schema, model, Types } = require("mongoose");
 
 const categorySchema = new Schema({
-  restraunts: {
+  res_id: {
     type: Types.ObjectId,
     ref: "restraunts",
   },
   name: {
     type: String,
     trim: true,
-    required: [true, "category is required"],
   },
+  items: [
+    {
+      name: {
+        type: String,
+        trim: true,
+      },
+      image: String,
+      price: {
+        type: Number,
+      },
+      discount: {
+        type: String,
+      },
+    },
+  ],
 });
 
-exports.Category = model("categories", categorySchema);
+exports.category = model("categories", categorySchema);

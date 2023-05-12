@@ -32,16 +32,20 @@ const Index = () => {
                 <div>
                   <div className="border boredr-[1px] shadow-lg p-3 w-full h-full">
                     <section>
-                      <img
-                        src={item.image}
-                        className="rounded-[4px] h-[200px] w-full"
-                        alt={item.location}
-                        tooltip="hello"
-                      ></img>
+                      {item.image === 0 ? (
+                        "loading"
+                      ) : (
+                        <img
+                          src={item.image}
+                          className="rounded-[4px] h-[200px] w-full"
+                          alt={item.name}
+                          tooltip="hello"
+                        ></img>
+                      )}
                       <hr className="my-2" />
-                      <Link to={`${item._id}`}>
+                      <Link to={`/${item.name}/${item._id}`}>
                         <p className="text-2 uppercase text-center py-3 font-semibold cursor-pointer">
-                          {item.location}
+                          {item.name}
                         </p>
                       </Link>
                     </section>

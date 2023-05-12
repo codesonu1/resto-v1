@@ -14,7 +14,7 @@ export const getAllProduct =
       dispatch(productLoading());
       useEffect(() => {
         async function fetch() {
-          const data = await api.get("/product");
+          const data = await api.get("/city");
           dispatch(productSuccess);
           setLoading(false);
           setProduct(data.data.data);
@@ -28,18 +28,76 @@ export const getAllProduct =
     }
   };
 
-export const getProductByI =
+export const filterProductByI =
   ({ _id, setProduct, setIsLoading }) =>
   async (dispatch) => {
     try {
       useEffect(() => {
         async function fetch() {
           dispatch(productLoading());
-          const data = await api.get(`product/${_id}`);
+          const data = await api.get(`restraunt?city_id=${_id}`);
+          console.log(data);
           dispatch(productSuccess);
           setProduct(data.data.data);
           setIsLoading(false);
           console.log(data.data.data);
+        }
+        fetch();
+      }, []);
+    } catch (error) {
+      dispatch(productError(error));
+    }
+  };
+
+export const getProductById =
+  ({ _id, setProduct, setLoading }) =>
+  (dispatch) => {
+    dispatch(productLoading());
+    try {
+      useEffect(() => {
+        async function fetch() {
+          const data = await api.get(`restraunt/${_id}`);
+          dispatch(productSuccess());
+          setProduct(data.data.data);
+          setLoading(false);
+        }
+        fetch();
+      }, []);
+    } catch (error) {
+      dispatch(productError(error));
+    }
+  };
+
+export const getCategorys =
+  ({ res_id, setCategory }) =>
+  (dispatch) => {
+    try {
+      dispatch(productLoading());
+      useEffect(() => {
+        async function fetch() {
+          const data = await api.get(`/categorys?res_id=${res_id}`);
+          productSuccess();
+          setCategory(data.data.data);
+        }
+        fetch();
+      }, []);
+    } catch (error) {
+      dispatch(productError(error));
+    }
+  };
+
+export const filterItems =
+  ({ _id, setItems, setLoading }) =>
+  (dispatch) => {
+    try {
+      dispatch(productLoading());
+      useEffect(() => {
+        async function fetch() {
+          const data = await api.get(`/items/${_id}`);
+          dispatch(productSuccess());
+          console.log(data);
+          setLoading(false);
+          setItems(data.data.data);
         }
         fetch();
       }, []);

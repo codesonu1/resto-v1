@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
-import { AuthReducer, ProductReducer } from "./index";
+import { AuthReducer, ProductReducer, ReviewReducer } from "./index";
 const middleware = [thunk];
 
 const token = localStorage.getItem("token");
@@ -14,6 +14,7 @@ export const store = configureStore({
   reducer: {
     auth: AuthReducer,
     product: ProductReducer,
+    review: ReviewReducer,
   },
   devTools: true,
   middleware: [...middleware],

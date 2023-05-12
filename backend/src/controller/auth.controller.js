@@ -1,138 +1,93 @@
+const { promisify } = require("util");
+const jwt = require("jsonwebtoken");
 const catchAsync = require("../middleware/catchAsync");
-const authModel = require("../model/auth.model");
-const jwttoken = require("jsonwebtoken");
+const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
-const salt = 10;
+const dotenv = require("dotenv").config();
+
+const jwtToken = (id) => {
+  return jwt.sign({ id: id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRE_IN,
+  });
+};
+exports.getUser = catchAsync(async (req, res, next) => {
+  const user = await User.find({});
+  res.status(201).json({
+    success: true,
+    total: user.length,
+    data: {
+      user,
+    },
+  });
+  next();
+});
 
 exports.signup = catchAsync(async (req, res, next) => {
-  await authModel.find({}).then((data) => {
-    res.status(200).json({
-      message: "created Successfully",
-      success: true,
-      data,
-    });
-  });
-});
-
-exports.createUser = catchAsync(async (req, res, next) => {
-  console.log(process.env.SECRET_KEY);
-  const { name, email, number, password, address, usertype } = req.body;
-  const hashpassword = await bcrypt.hashSync(password, salt);
-  const existEmail = await authModel.findOne({ email: email });
-  if (existEmail) {
-    return res.status(404).json({
-      success: false,
-      messsage: "already exist",
-    });
-  } else {
-    const data = await authModel.create({
-      name,
-      email,
-      number,
-      password: hashpassword,
-      address,
-      usertype,
-    });
-    const jwtdata = {
-      user: {
-        id: data._id,
-      },
-    };
-    const authtoken = await jwttoken.sign(jwtdata, process.env.SECRET_KEY);
-    res
-      .status(200)
-      .json({
-        message: "Signu Successfully",
-        success: true,
-        data,
-        authtoken,
-      })
-      .catch((err) => console.log(err));
-  }
-});
-
-exports.changePassword = catchAsync(async (req, res, next) => {
-  const password = await authModel.findByIdAndUpdate(req.params._id, {
-    $set: {
-      password: bcrypt.hashSync(req.body.password, salt),
+  const newUser = await User.create(req.body);
+  res.status(201).json({
+    success: true,
+    data: {
+      user: newUser,
     },
-    new: true,
+    token: jwtToken(newUser._id),
   });
-  res
-    .status(200)
-    .json({
-      message: "Change successfully",
-      success: true,
-      newpassword: password,
-    })
-    .catch((err) => console.log(err));
-});
-
-exports.deleteMany = catchAsync(async (req, res, next) => {
-  await authModel
-    .deleteMany({})
-    .then((data) => {
-      res.status(200).json({
-        message: "deleted Successfully",
-        success: true,
-        data,
-      });
-    })
-    .catch((err) => console.log(err));
-});
-
-exports.deleteByid = catchAsync(async (req, res, next) => {
-  await authModel
-    .findOneAndDelete(req.params._id)
-    .then((data) => {
-      res.status(200).json({
-        message: "deleted Successfully",
-        success: true,
-        data,
-      });
-    })
-    .catch((err) => console.log(err));
+  next();
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  const checkMail = await authModel.findOne({ email: email });
-  if (!email) {
-    res.status(404).json({
-      message: "invalid mail",
-      success: false,
-    });
-  }
-  const checkPassword = await bcrypt.compare(password, checkMail.password);
-  if (!checkPassword) {
-    res.status(404).json({
-      success: false,
-      message: "invalid password",
-    });
-  }
-  const jwtData = {
-    login: {
-      id: checkMail._id,
-    },
-  };
-  console.log(authModel.usertype);
 
-  const logintoken = await jwttoken.sign(jwtData, process.env.SECRET_KEY);
+  if (!email || !password) {
+    return res.send("Feilds cannot be null", 400);
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.send("Invalid email and password", 400);
+  }
+
   res.status(200).json({
+    message: "login",
     success: true,
-    message: "Well Come-User",
-    loginToken: logintoken,
-    role: this.usertype,
+    token: jwtToken(user._id),
   });
 });
 
-exports.getuserlogin = catchAsync(async (req, res, next) => {
-  const loginId = req.login.id;
-  console.log(loginId, "user id");
-  const user = await authModel.findById(loginId).select("-password");
-  console.log(user);
-  res.status(200).json({
-    message: "user login data",
-    data: user,
-  });
+exports.protectRoute = catchAsync(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  console.log(token, "token");
+
+  if (!token) {
+    res.send("no token found please login", 401);
+  }
+
+  //1 . verify the token
+  const decoded = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET_KEY
+  );
+
+  //2 . checking: if there  is no user but also the token is using
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    res.send("No longer token  , please login ", 401);
+  }
+
+  console.log(decoded.iat);
+  //if user change password after the token was issused
+  // if (currentUser.createPasswordAfter(decoded.iat)) {
+  //   res.send("user recently changed Password , please login  again", 401);
+  // }
+
+  req.user = currentUser;
+
+  next();
 });

@@ -1,6 +1,7 @@
 const { model, Schema } = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const salt = 10;
 const userSchema = new Schema({
   name: {
     type: String,
@@ -15,7 +16,11 @@ const userSchema = new Schema({
     unique: true,
     validate: [validator.isEmail, "provide valid email"],
   },
-  photo: String,
+  role: {
+    type: String,
+    default: "customer",
+    enum: ["admin", "customer", "hotel-admin"],
+  },
   password: {
     type: String,
     minlength: 6,
@@ -32,17 +37,40 @@ const userSchema = new Schema({
       message: "password is not same",
     },
   },
+  passwordChangeAt: Date,
 });
 
 userSchema.pre("save", async function (next) {
+  // if password is modified
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
 
-  // this snpits of code delete the fiels of passwordComfirmed in model
+  //hasing the password
+  this.password = await bcrypt.hash(this.password, salt);
+
+  //delete passwordcomfirmed from the database
   this.passwordComfirmed = undefined;
 });
 
-// instant method : all the user of the document can access
+userSchema.methods.correctPassword = function (
+  crienditailPassword,
+  userPassword
+) {
+  return bcrypt.compare(crienditailPassword, userPassword);
+};
+
+// userSchema.methods.createPasswordAfter = async function (JWTTimestamp) {
+//   if (this.passwordChangeAt) {
+//     const changeTimeStamp = parseInt(
+//       this.passwordChangeAt.getTime() / 1000,
+//       10
+//     );
+
+//     return JWTTimestamp < changeTimeStamp;
+//   }
+//   //the user has not change the password
+//   return false;
+// };
+
 const User = model("User", userSchema);
 
 module.exports = User;

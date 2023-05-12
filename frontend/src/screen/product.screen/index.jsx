@@ -1,29 +1,38 @@
-import React, { useState, Suspense } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { TfiShare } from "react-icons/tfi";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdDeliveryDining } from "react-icons/md";
-import { getProductByI } from "../../store/Product/product.thunk";
-import Tooltip from "@mui/material/Tooltip";
+import { filterProductByI } from "../../store/Product/product.thunk";
 import { Container } from "@mui/material";
+import Cuisines from "./cuisines";
+// import Tooltip from "@mui/material/Tooltip";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const date = new Date().getHours();
+  console.log(date);
 
   const [product, setProduct] = useState([]);
+  console.log(product);
   const param = useParams();
   const _id = param._id;
 
   const dispatch = useDispatch();
-  dispatch(getProductByI({ _id, setProduct, setIsLoading }));
+  dispatch(filterProductByI({ _id, setProduct, setIsLoading }));
 
   return (
     <div className="bg-[#FCF8F3] h-full">
+      <Link to="/delivery">
+        <p className="text-[#F4902F] uppercase m-2 flex">back</p>
+      </Link>
       <Container>
         <div className="flex gap-4">
-          <div>item name</div>
+          <div>
+            <Cuisines />
+          </div>
           <div>
             <div className="hover:text-[#F4902F]">
               <TfiShare className="text-[2rem]  text-[#d6af3a] hover:border hover:rounded-full hover:bg-[#F4902F] p-[1.3rem] w-[60px] h-[60px] hover:text-white " />
@@ -35,62 +44,51 @@ const Index = () => {
                 <img src="/Loading_icon.gif" alt="" />
               </div>
             )}
-            {[product].map((item) => (
-              <div
-                key={item._id}
-                className="grid grid-flow-row grid-cols-3 gap-3  "
-              >
-                {item.items?.map((item) => {
-                  return (
-                    <div>
-                      <div className="hover:border hover:bg-[white] hover:shadow-md border">
+
+            <div className="grid grid-flow-row grid-cols-3 gap-3  ">
+              {product.map((item) => {
+                return (
+                  <div>
+                    <div className="hover:border hover:bg-[white] hover:shadow-md border">
+                      {item.image.length === 0 ? (
+                        <img src="/Loading_icons.gif" alt="" />
+                      ) : (
                         <img
                           src={item.image}
-                          alt={item.restruant_name}
-                          className="w-[200px] h-[200px]"
+                          alt={item.name}
+                          className="w-full h-[200px]"
                         />
+                      )}
 
+                      <Link to={`/product/${item.name}/${item._id}`}>
                         <p className="capitalize px-2 text-[1rem] tracking-wide pt-2 font-[400]">
-                          {item.restruant_name}
+                          {item.name}
                         </p>
-                        <p className="capitalize px-2 py-2">
-                          {item.restruant_location}
+                      </Link>
+                      <p className="capitalize px-2 py-2">{item.location}</p>
+
+                      <p className="capitalize px-2 py-2">{item.cusinis}</p>
+                      <div className="flex gap-2">
+                        <AiOutlineClockCircle className="m-1 " />
+                        <p>
+                          {date < item.opening
+                            ? date > item.opening
+                            : "opening"}
                         </p>
-                        <p className="capitalize px-2 text-[0.7rem] pt-2">
-                          rating
+                        <p className="text-[0.8rem]">
+                          {item.opening} - {item.closing}
                         </p>
-                        <p className="capitalize px-2 py-2">
-                          {item.restruant_tag}
-                        </p>
-                        <div className="flex gap-2">
-                          <AiOutlineClockCircle className="my-1" />
-                          <p
-                            style={{
-                              color:
-                                date < item.restruant_open ? "green" : "red",
-                            }}
-                          >
-                            {date < item.restruant_open
-                              ? "open"
-                              : date < item.restruant_closed
-                              ? "open"
-                              : "closed"}
-                          </p>
-                          <p className="text-[0.8rem]">
-                            {item.restruant_open} AM -{item.restruant_closed} PM
-                          </p>
-                        </div>
-                        <hr className="my-1" />
-                        <div className="flex">
-                          <MdDeliveryDining className="text-[2rem] text-[gray]" />
-                          <p className="p-2">{item.delivery_time} mins</p>
-                        </div>
+                      </div>
+                      <hr className="my-1" />
+                      <div className="flex justify-center">
+                        <MdDeliveryDining className="text-[2rem] text-[gray]" />
+                        <p className="p-2">{item.delivery_time} mins</p>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            ))}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </Container>

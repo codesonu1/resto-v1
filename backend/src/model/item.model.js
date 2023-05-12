@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require("mongoose");
 
 const itemSchema = new Schema({
-  category: {
+  category_id: {
     type: Types.ObjectId,
     ref: "categories",
   },
@@ -9,20 +9,19 @@ const itemSchema = new Schema({
     type: String,
     required: true,
   },
-  price: {
-    type: String,
-    required: true,
+  prices: {
+    type: Number,
   },
   image: String,
   discount: {
     type: Number,
     validate: {
       validator: function (dis) {
-        return dis >= this.price;
+        return dis < this.prices;
       },
-      message: "Discount must be  less than the regular price {{VALUE}}",
+      message: "Discount price {{VALUE}} is less than regular price",
     },
   },
 });
 
-exports.Item = model("items", itemSchema);
+exports.item = model("items", itemSchema);

@@ -8,6 +8,10 @@ const citySchema = new Schema({
     type: String,
     require: [true, "reqired"],
   },
+  street: {
+    type: String,
+    require: [true, "reqired"],
+  },
 });
 
 exports.City = model("cities", citySchema);

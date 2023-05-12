@@ -6,6 +6,8 @@ import Register from "./screen/auth.screen/signup";
 import Dellivery from "./screen/delivery.screen";
 import Dashboard from "./dashboard/index";
 import ProductScreen from "./screen/product.screen/index";
+import ProductDetails from "./screen/product.screen/productDetails";
+import Footer from "./component/components/Footer";
 const RouteManager = () => {
   const token = localStorage.getItem("token");
 
@@ -16,7 +18,8 @@ const RouteManager = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/delivery" element={<Dellivery />} />
-        <Route path="/delivery/:_id" element={<ProductScreen />} />
+        <Route path={`/:name/:_id`} element={<ProductScreen />} />
+        <Route path={`product/:name/:_id`} element={<ProductDetails />} />
         <Route
           path="/dashboard"
           element={
@@ -26,6 +29,7 @@ const RouteManager = () => {
           }
         />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 };
